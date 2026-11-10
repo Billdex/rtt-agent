@@ -15,7 +15,7 @@ AGENTS.md              本文件：入口与分流
 progress/              运行产物，被 gitignore，不进版本库
 ai-raid-agent-kit/     可分享的工具包
   scripts/             8 个脚本，全部通过 CDP 操作已登录浏览器
-  LESSONS.md           34 条实测踩坑（本项目最值钱的部分）
+  LESSONS.md           实测踩坑，按编号顺延（本项目最值钱的部分）
   SKILL.md             浓缩规约（喂给 AI 的系统指令版）
   AGENT_PROMPT.md      另一版提示词
   TEMPLATE-report.md   战报模板
@@ -27,6 +27,7 @@ ai-raid-agent-kit/     可分享的工具包
 | --- | --- |
 | 第一次接触 / 要正式开跑 | `QUICKSTART.md`（全文） |
 | 以前跑过、要接着跑 | `progress/HANDOFF.md`（先看第 0、3、4 节） |
+| 要看还剩哪些事没做 | `progress/TODO.md`（每条带证据 / 入口 / 完成判据） |
 | 要看历史战绩与改动依据 | `progress/report.md`（30 KB，**只看末尾和「本轮改动」**，别从头读） |
 | 要解释某个反常现象 | `ai-raid-agent-kit/LESSONS.md`（按编号 grep，别全量读） |
 | 要用/改脚本 | `ai-raid-agent-kit/scripts/README.md` |
