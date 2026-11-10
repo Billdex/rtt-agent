@@ -1,7 +1,7 @@
 # 工具与操作层知识（T 编号）
 
 > **这份文件不参与任何游戏决策。** 它只回答一件事：*怎么让脚本和页面按预期动起来。*
-> 与 `LESSONS.md`（游戏知识）、`playbook/method.md`（实验纪律）严格分开，别互相搬。
+> 与 `LESSONS.md`（游戏知识）、`METHOD.md`（实验纪律与人机边界）严格分开，别互相搬。
 
 ## 写入 / 淘汰规则
 
@@ -136,6 +136,12 @@ node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12 > /tmp/rw.
 - 正则别写死中文近义词，面板文案随版本变（携行 → 携带）。
 - 判满血用 `当前 / 上限` 比值，不要比固定数字。
 - 两个回合后的通用动作：**让脚本打印它读到的原始串**，不要只打印结论。
+
+## T-17 战局记录页只保留最近 10 局，没有分页
+
+- 实测（11-11 02:5x）：`/raid?tab=history` 里 `button` 行恒为 10，**无分页控件、无滚动加载容器**（`scrollHeight > clientHeight` 的元素里没有一个装着列表）。
+- 后果：`analyze-log` 每次只能覆盖最近 10 局；更早的样本只能靠上一次的 `progress/raid-analysis.json` 和 `report.md` 里的战报表格，**不要以为"重跑一次就拿到全量"**。
+- 做法：需要跨批次样本时，先把旧 `raid-analysis.json` 复制成 `progress/run-<用途>/raid-analysis.json` 再重跑，两边合并算。
 
 ---
 

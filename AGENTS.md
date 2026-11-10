@@ -10,7 +10,7 @@
 | 线 | 目标 | 成功长什么样 |
 | --- | --- | --- |
 | **A · 策略迭代** | 产出可持续自我迭代的「日志 → 归因 → 单变量 → 验证」方法与工具 | 结果：全样本 `收益/回合` 上升且可归因到单一变量；方法：新人只看 `QUICKSTART.md` 能独立跑完一轮 |
-| **B · 账号经营** | 配装、仓库、医疗、任务、现金始终处于可打仗的状态 | 五条健康线全部不越线（`playbook/account-line.md`） |
+| **B · 账号经营** | 配装、仓库、医疗、任务、现金始终处于可打仗的状态 | 五条健康线全部不越线（`METHOD.md` §运营 6 / `STATE.md` §2） |
 
 共享底座：CDP 脚本 + 战局日志。**两条线互斥**——同一轮只有一条是"主推进"，
 因为换配装会同时改变"打不穿"与"收益密度"，本轮实验直接作废（实例见 `LESSONS.md` G-10）。
@@ -18,40 +18,39 @@
 ```
 AGENTS.md                    本文件：路由
 QUICKSTART.md                完整说明书（第一次接触才读）
-playbook/
-  strategy-line.md           A 线：目标 / 白名单 / 判据
-  account-line.md            B 线：五条健康线 / 例行 / 互斥规则
-  method.md                  实验纪律 M-01…M-08（两线共用）
-  human-touchpoints.md       必须停下来的 H-01…H-07
-  task-template.md           任务单模板（每轮一张）
-progress/                    运行产物，gitignore
-  STATE.md                   ★唯一状态真值
-  tasks/                     本轮任务单
-  TODO.md / report.md / HANDOFF.md / archive/
-ai-raid-agent-kit/
+ai-raid-agent-kit/           ★可外发：换个账号/换个人也成立
   LESSONS.md                 游戏知识 G 编号（可全读，约 30 条）
+  METHOD.md                  ★方法 M / 边界 H / 运营手册（两线·流程·变量表·检查表·决策规则）+ 任务单 + 判据
   scripts/TOOLING.md         工具与操作 T 编号（修好即删，按需 grep）
   scripts/                   脚本，全部通过 CDP 操作已登录浏览器
   SKILL.md / AGENT_PROMPT.md / TEMPLATE-report.md
+progress/                    ★不外发，运行产物 + 本账号唯一取值处（gitignore）
+  STATE.md                   ★唯一状态真值：参数取值 / 健康线目标 / 禁动清单 / 主指标 / 活跃假设
+  tasks/                     本轮任务单
+  TODO.md / report.md / HANDOFF.md / archive/
 ```
+
+**边界只有一条**：`ai-raid-agent-kit/` 是全部可外发内容（G/T/M/H 自洽）；`progress/` 是本账号私货。
+kit 内部不许引用 kit 之外的文件；账号取值只能出现在 `progress/STATE.md`。
 
 ## 第 0 步 · 路由（30 秒，别跳过）
 
 | 这轮要干什么 | 走哪条线 | 只读这些 |
 | --- | --- | --- |
 | 第一次接触 / 要正式开跑 | — | `QUICKSTART.md` 全文 |
-| 提升 `收益/回合`、验证某个参数、换地图 | A | `playbook/strategy-line.md` + `progress/STATE.md` §1 |
-| 重装、治疗、清仓、接任务、改配装、算账 | B | `playbook/account-line.md` + `progress/STATE.md` §2 |
+| 提升 `收益/回合`、验证某个参数、换地图 | A | `ai-raid-agent-kit/METHOD.md` §运营 1–5 + `progress/STATE.md` §1 / §3 |
+| 重装、治疗、清仓、接任务、改配装、算账 | B | `ai-raid-agent-kit/METHOD.md` §运营 6–9 + `progress/STATE.md` §2 |
 | 脚本报错、页面点不到、解析失败 | 工具 | `ai-raid-agent-kit/scripts/TOOLING.md`（按编号 grep） |
 | 接着上次的进度 | — | `progress/HANDOFF.md`（只有两个问题：停在哪 / 怎么接） |
 | 要解释某个反常现象 | — | `LESSONS.md`（G 编号）；查不到再看 `scripts/README.md` |
+| 到了要停下来问人的地方 / 要定判据与写回 | — | `ai-raid-agent-kit/METHOD.md`（H 编号 + 附录 B） |
 
 **判断"这属于哪条线"的唯一问法**：这次改动会让一个**游戏决策**变好吗？
 会 → A 或 B（看决策是"怎么打"还是"带什么/存什么"）；只是让脚本能跑 → 工具。
 
 ## 第 1 步 · 领任务单（不许跳过）
 
-复制 `playbook/task-template.md` 到 `progress/tasks/<日期>-<序号>-<短名>.md`。
+复制任务单骨架（`ai-raid-agent-kit/METHOD.md` 附录 A）到 `progress/tasks/<日期>-<序号>-<短名>.md`。
 **「判据」与「前置（需要人类做的事）」两栏没填完，不许开始执行。**
 
 一张单 = 一个变量 / 一个状态。跨线的事拆单。"顺便做"的事单独开单。
@@ -65,8 +64,8 @@ ai-raid-agent-kit/
 5. **WIP = 1**：同时只有一个活跃假设（M-07）。其余排队写进 `STATE.md`，不许并轮验证。
 6. **花钱要报备**（H-04）：加载配装、自动补货、治疗都会扣钱，先核对缺口与费用。
 7. **两线互斥**：策略轮内不动配装、不动工具；经营轮内不跑批次、不动策略参数。
-8. **知识按半衰期分家**：游戏事实 → `LESSONS.md`；脚本/操作 → `scripts/TOOLING.md`；实验纪律 → `playbook/method.md`。
-   工具类内容写进 `LESSONS.md` 视为污染，必须移走。
+8. **知识按半衰期分家**：游戏事实 → `LESSONS.md`；脚本/操作 → `scripts/TOOLING.md`；实验纪律与人机边界 → `METHOD.md`。
+   工具类内容写进 `LESSONS.md` 视为污染，必须移走；本账号的**值**只准写在 `STATE.md`。
 9. **状态只信 `STATE.md`**。`report.md` 是过程记录，不许当状态读；数字冲突时以最近一次脚本输出为准。
 10. **自动化可能违反游戏用户协议**，风险由人类自行确认，不要替他决定（H-07）。
 
@@ -87,6 +86,7 @@ node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12   # 盯批
 
 - `rtt.mjs` 子命令：`status / tabs / text / click / goto / shot / eval / evalscript / key / wait / fillfile`。
 - 换产物目录：`RTT_OUT=progress/run-03 node ai-raid-agent-kit/scripts/analyze-log.mjs`。
+- **外发包**：`git archive HEAD ai-raid-agent-kit -o rtt-kit.tar.gz`（只含可外发内容，天然不含 `progress/`）。
 - **不要手写 bash 循环盯进度**（T-15）；**不要用 `| tail` 判退出码**。
 - 表单/滑杆：React 受控组件不认程序赋值，必须用真实键鼠事件（T-04）。
 

@@ -3,7 +3,9 @@
 > 人类读者：把这份文件连同 `ai-raid-agent-kit/` 目录一起发给你的 AI 助手，然后说一句「按 QUICKSTART 开始」即可。你只需要做两件事：**在弹出的浏览器里登录一次**、**在它要花钱时点头**。
 >
 > **已经跑过的人别从这份读起**：日常开工只看 `progress/STATE.md`（现在是什么状态）+ `progress/HANDOFF.md`（怎么接上次）。
-> 这份文件是「第一次接触」的完整说明书；路线图与纪律在 `AGENTS.md` → `playbook/`。
+> 这份文件是「第一次接触」的完整说明书；路线图在 `AGENTS.md`。
+> **通用纪律与人机边界在 `ai-raid-agent-kit/METHOD.md`（随包外发，换账号可原样沿用）**；
+> 本账号的**取值**（参数、健康线目标、禁动清单）全在 `progress/STATE.md`，不外发；结构一律在 `METHOD.md`。
 
 ---
 
@@ -21,6 +23,8 @@
    你不在局中手操，所以「托管」天然成立。
 3. 每张图有**加入窗口 100 回合**，过了就无法再加入该局；各图撤离点数量不同（机场 8 个 / 旧城区 5 个）。
 4. 结局三选一：**撤离**（全额结算）/ **匆匆撤离**（经验减半）/ **阵亡**（净亏损）。
+   判【匆匆】的唯一条件见 G-12：**离场时局内回合数太少**——手动撤离必然触发，软撤离（负重/血量/弹尽/收益门槛）
+   在总回合数不足时同样触发，与"谁发起撤离"无关。
 
 **战斗与损耗**
 
@@ -48,18 +52,18 @@
 
 你是"浏览器游戏托管操作员"。你的任务不是代打，而是替玩家维护**两条互斥的目标线**：
 
-| 线 | 目标 | 详细规约 |
+| 线 | 目标 | 规约在哪 |
 | --- | --- | --- |
-| **A · 策略迭代** | 用日志证据把「收益/回合」推上去，并让这套推进方法可复用 | `playbook/strategy-line.md` |
-| **B · 账号经营** | 配装 / 仓库 / 医疗 / 任务 / 现金始终可打仗 | `playbook/account-line.md` |
+| **A · 策略迭代** | 用日志证据把「收益/回合」推上去，并让这套推进方法可复用 | `ai-raid-agent-kit/METHOD.md`（M-01…M-09 + §运营 1–5） |
+| **B · 账号经营** | 配装 / 仓库 / 医疗 / 任务 / 现金始终可打仗 | 同上（§运营 6–9；M-09 管配装判据） |
 
 **同一轮只有一条线是"主推进"。** 换配装会同时改变"打不穿"和"收益密度"，混在一轮里本轮数据就作废。
 
 四条原则：
 1. 先接上、再理解、最后才动手调参。
 2. 任何改动都要能说出"因为哪一局的哪条日志"。
-3. 不确定就停下来问人（边界清单见 `playbook/human-touchpoints.md`），不要猜、不要连试三次。
-4. 开工前先领一张任务单（`playbook/task-template.md`），判据是数字不是感觉。
+3. 不确定就停下来问人（边界清单 H-01…H-07 见 `ai-raid-agent-kit/METHOD.md`），不要猜、不要连试三次。
+4. 开工前先领一张任务单（骨架见 `METHOD.md` 附录 A），判据是数字不是感觉。
 
 > **本文是说明书，不是死规则。**
 > 一旦跑出与本文冲突的**实测证据**，就以实测为准，并**当场把本文改成正确的描述**
@@ -126,14 +130,16 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 ```
 你的工作目录/                    ← 在这里执行 node 命令，产物落在这里
 ├── AGENTS.md                    ← 给 AI 的路由表（先读这个）
-├── playbook/                    ← 规约：两条线 / 实验纪律 / 人机边界 / 任务单模板
-│   ├── strategy-line.md             A 线
-│   ├── account-line.md              B 线
-│   ├── method.md                    实验纪律 M 编号
-│   ├── human-touchpoints.md         必须停下来问人的 H 编号
-│   └── task-template.md             每轮一张任务单
-├── progress/                    ← 脚本自动创建，不用手动 mkdir
-│   ├── STATE.md                    ★唯一状态真值（资产/主指标/活跃假设）
+├── ai-raid-agent-kit/           ← ★可外发：换个账号/换个人也成立
+│   ├── LESSONS.md               ← 游戏知识 G 编号（会改变游戏决策的事实）
+│   ├── METHOD.md                ← ★通用纪律 M 编号 + 人机边界 H 编号 + 任务单骨架 + 判据分级
+│   ├── scripts/                 ← 脚本，可改；改动记进 progress/report.md
+│   │   ├── README.md               每个脚本干什么、参数怎么给
+│   │   └── TOOLING.md              工具与操作层知识 T 编号（修好即删）
+│   ├── SKILL.md / AGENT_PROMPT.md / README.md
+│   └── TEMPLATE-report.md
+├── progress/                    ← ★不外发；脚本自动创建，不用手动 mkdir
+│   ├── STATE.md                    ★唯一状态真值（资产/主指标/活跃假设/配置快照）
 │   ├── HANDOFF.md                  停在哪 / 下次怎么接（只有这两个问题）
 │   ├── tasks/                      本轮任务单
 │   ├── report.md                   每轮战报（用 TEMPLATE-report.md 起头）
@@ -141,15 +147,10 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 │   ├── raid-analysis.md            日志统计（人读汇总）
 │   ├── raid-log.jsonl              局中采样（monitor.mjs 追加）
 │   └── quests.json                 任务扫描结果
-├── chrome-profile/              ← 登录态，不要提交、不要外发
-└── ai-raid-agent-kit/           ← 工具包本体，保持干净，可直接打包分享
-    ├── scripts/                 ← 脚本，可改；改动记进 progress/report.md
-    │   ├── README.md               每个脚本干什么、参数怎么给
-    │   └── TOOLING.md              工具与操作层知识 T 编号（修好即删）
-    ├── LESSONS.md               ← 游戏知识 G 编号（会改变游戏决策的事实）
-    ├── SKILL.md / AGENT_PROMPT.md / README.md
-    └── TEMPLATE-report.md
+└── chrome-profile/              ← 登录态，不要提交、不要外发
 ```
+
+**打包规则**：只发 `ai-raid-agent-kit/` 就能跑（G/T/M/H 四项自洽）。`progress/` 是本账号私货（参数取值、健康线目标、禁动清单），发出去别人也用不上。
 
 标准用法（注意 `node` 的路径和工作目录的关系）：
 
@@ -223,7 +224,7 @@ node scripts/analyze-log.mjs          # 历史战局日志
 每一轮按这个顺序做，不要跳步：
 
 ```
-0) 领任务单   →  复制 playbook/task-template.md；写清唯一变量、判据数字、需要人做的事
+0) 领任务单   →  复制任务单骨架（METHOD.md 附录 A）；写清唯一变量、判据数字、需要人做的事
 1) preflight  →  任一项 FAIL 就先修，不开局
 2) 开局       →  优先用游戏自带自动加入；设局数上限、资金下限
 3) 局中       →  可读页面、可刷新；但绝不点「手动撤离」
@@ -234,7 +235,7 @@ node scripts/analyze-log.mjs          # 历史战局日志
 ```
 
 > 第 0 步不是形式：没有判据数字，第 7 步就只能写"跑了 N 局"。
-> 若本轮其实是"重装 / 清仓 / 接任务"，它属于 **B 线**，看 `playbook/account-line.md`，**不要套这个循环**。
+> 若本轮其实是"重装 / 清仓 / 接任务"，它属于 **B 线**（配装判据见 M-09，检查表见 `METHOD.md` §运营 6），**不要套这个循环**。
 
 ### 归因表（照表判断，不要凭感觉）
 

@@ -60,19 +60,14 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 .
 ├── AGENTS.md                # 给 AI 助手的路由表：先判断这轮属于哪条线
 ├── QUICKSTART.md            # 第一次接触的完整说明书
-├── playbook/                # 规约：两条目标线 / 实验纪律 / 人机边界 / 任务单模板
-│   ├── strategy-line.md         # A 线：策略迭代
-│   ├── account-line.md          # B 线：账号经营
-│   ├── method.md                # 实验纪律（M 编号，两线共用）
-│   ├── human-touchpoints.md     # 必须停下问人的地方（H 编号）
-│   └── task-template.md         # 每轮一张任务单
-├── progress/                # 运行产物，不进版本库（STATE.md 是唯一状态源）
-└── ai-raid-agent-kit/       # 工具包，可直接拷贝分享
+├── progress/                # 运行产物 + 本账号取值，不进版本库（STATE.md 是唯一状态源）
+└── ai-raid-agent-kit/       # ★全部可外发内容，可直接拷贝分享
     ├── scripts/             # 脚本目录，全部通过 CDP 操作已登录浏览器
     │   └── TOOLING.md       # 工具与操作层知识（T 编号，修好即删）
+    ├── LESSONS.md           # 游戏知识（G 编号，只放会改变游戏决策的事实）
+    ├── METHOD.md            # 方法M/边界H/运营手册：两线、流程、变量表、检查表、任务单、判据
     ├── SKILL.md             # 作为系统指令喂给 AI 的浓缩版
     ├── AGENT_PROMPT.md      # 另一版提示词
-    ├── LESSONS.md           # 游戏知识（G 编号，只放会改变游戏决策的事实）
     └── TEMPLATE-report.md   # 战报模板
 ```
 

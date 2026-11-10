@@ -48,6 +48,8 @@ pnpm add playwright-core
 
 > 浏览器已经开在 127.0.0.1:9222，你去读页面。脚本在 `scripts/` 下，用 `node scripts/rtt.mjs status` 试。
 
+同时把 `LESSONS.md`（游戏事实 G）、`METHOD.md`（纪律 M / 边界 H）、`scripts/TOOLING.md`（工具 T）作为参考文件给它 —— **这四项都在本目录内，`ai-raid-agent-kit/` 单独发出去就能用。**
+
 验证标准：AI 能说出当前页面标题、你的游戏 ID、当前金币。
 
 ### 第三步：让它跑第一轮（20 分钟）

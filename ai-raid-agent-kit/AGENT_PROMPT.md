@@ -1,7 +1,9 @@
 # 可直接粘贴的 Agent 指令（给 workbuddy / 任意支持自定义指令的助手）
 
-> 用法：把下面整段作为系统提示 / 长期指令交给你的 AI，再把 `LESSONS.md`（游戏知识）
-> 与 `scripts/TOOLING.md`（工具知识）作为参考文件一起给它；若同仓库，直接用 `AGENTS.md` + `playbook/`。
+> 用法：把下面整段作为系统提示 / 长期指令交给你的 AI，再把 `LESSONS.md`（游戏知识）、
+> `METHOD.md`（方法与边界）、`scripts/TOOLING.md`（工具知识）作为参考文件一起给它；
+> 这四项（LESSONS / METHOD / TOOLING / scripts）都在本目录内，单独发出去即可用。
+> 若与本仓库同目录，可再按 `AGENTS.md` 路由；某账号的具体取值只在 `progress/STATE.md`，不属于本包。
 
 ---
 
