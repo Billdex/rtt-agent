@@ -80,6 +80,24 @@ RTT_SAMPLES=120 RTT_EVERY_MS=15000 node scripts/monitor.mjs
 
 ---
 
+## raid-watch.mjs —— 有界时长的进度轮询（推荐用来盯批次）
+
+```bash
+node scripts/raid-watch.mjs --every=120 --minutes=12
+```
+
+每 `--every` 秒跳一次 `/raid` 读状态，打印一行：`时间 +已跑分钟 · 地图 第N回合 击杀 血`。
+
+- `--minutes` 是**总时长硬上限**，到点自己退出（退出码 2），并打印 `{"summary":{...}}`
+- 跑过至少一局、且连续两次采样都不在局内 → 判定批次结束，退出码 0
+- `--json` 让每个采样输出一行紧凑 JSON，方便后续管道处理
+- 只做 `goto` + 读文本，不点任何按钮
+
+**为什么不用 bash 循环**：`for i in ...; do ...; sleep 150; done` 一旦总时长超过单条命令的时限，
+就会被外部截断——采样只打印一半、进程被杀，看起来像"脚本卡住/需要手动结束"。总时长必须写进参数里。
+
+---
+
 ## analyze-log.mjs —— 日志分析（核心）
 
 ```bash

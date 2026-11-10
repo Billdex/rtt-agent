@@ -70,6 +70,7 @@ pnpm add playwright-core
 | `scripts/rtt.mjs` | CDP 控制：status / shot / text / click / goto / eval / fillfile |
 | `scripts/preflight.mjs` | 开局前检查：装备槽位、负重、生命、现金、同步状态 |
 | `scripts/monitor.mjs` | 后台采样：每 N 秒记录回合/击杀/血量，写到 jsonl |
+| `scripts/raid-watch.mjs` | 有界时长轮询：每 N 秒打印一行进度，到 `--minutes` 自动退出并给汇总 |
 | `scripts/analyze-log.mjs` | 读战局详情日志，统计交火/命中/落空/缺弹/缺药 |
 | `scripts/quest-scan.mjs` | 扫描任务列表：状态、进度、可否提交 |
 
