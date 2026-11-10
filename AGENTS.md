@@ -56,7 +56,7 @@ node ai-raid-agent-kit/scripts/preflight.mjs           # 开局前必跑；任�
 node ai-raid-agent-kit/scripts/quest-scan.mjs          # 任务三态扫描（可接取/进行中/可提交）
 node ai-raid-agent-kit/scripts/analyze-log.mjs         # 核心：解析战局日志 → raid-analysis.{json,md}
 node ai-raid-agent-kit/scripts/strategy-snapshot.mjs   # 调参前后各跑一次，diff 就是改动凭证
-node ai-raid-agent-kit/scripts/raid-watch.mjs --every=120 --minutes=12   # 盯批次（退出码 0=结束, 2=到时限）
+node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12    # 盯批次（退出码 0=结束, 2=到时限；看 summary.lagSec）
 ```
 
 - `rtt.mjs` 子命令：`status / tabs / text / click / goto / shot / eval / evalscript / key / wait / fillfile`。

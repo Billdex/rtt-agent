@@ -83,15 +83,24 @@ RTT_SAMPLES=120 RTT_EVERY_MS=15000 node scripts/monitor.mjs
 ## raid-watch.mjs —— 有界时长的进度轮询（推荐用来盯批次）
 
 ```bash
-node scripts/raid-watch.mjs --every=120 --minutes=12
+node scripts/raid-watch.mjs --every=45 --minutes=12
 ```
 
 每 `--every` 秒跳一次 `/raid` 读状态，打印一行：`时间 +已跑分钟 · 地图 第N回合 击杀 血`。
 
 - `--minutes` 是**总时长硬上限**，到点自己退出（退出码 2），并打印 `{"summary":{...}}`
-- 跑过至少一局、且连续两次采样都不在局内 → 判定批次结束，退出码 0
+- 跑过至少一局、且连续 `--idle`（默认 2）次采样都不在局内 → 判定批次结束，退出码 0
+- **空闲复核用 8 秒短轮询**，不再等一整个 `--every`：尾部延迟 ≈ `--every + 8s`
+  （旧版要等 2 个完整周期，`--every=120` 时实测约 4 分钟才发现局已结束）
+- `--grace`（默认 90 秒）：开局后这么久一次没见过战局 → 判 `no-raid-seen` 并退出 0，
+  不再傻等到 `--minutes` 耗尽（这就是"要人工结束"的主要原因）
+- `summary.lagSec` = 最后一次确认"在局内"到脚本退出的秒数，**这就是你感觉到的迟钝量**，直接看它
+- 每个采样都会追加写 `progress/raid-watch-YYYY-MM-DD.jsonl`，进程被杀也不丢证据
 - `--json` 让每个采样输出一行紧凑 JSON，方便后续管道处理
 - 只做 `goto` + 读文本，不点任何按钮
+
+**别用 `| tail` 观察退出码**：管道的退出码会变成 `tail` 的 0，`0/2` 的语义就失效了。
+要判退出码就 `node ... > /tmp/rw.log 2>&1; echo $?`，然后 `tail /tmp/rw.log`。
 
 **为什么不用 bash 循环**：`for i in ...; do ...; sleep 150; done` 一旦总时长超过单条命令的时限，
 就会被外部截断——采样只打印一半、进程被杀，看起来像"脚本卡住/需要手动结束"。总时长必须写进参数里。
