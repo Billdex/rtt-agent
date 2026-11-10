@@ -62,6 +62,8 @@ for (const [mapId, m] of Object.entries(content.maps)) {
 }
 
 // ---------- 2. 日志实收：每个点位实际搜到多少钱 ----------
+// 白名单：日志里只把**真实存在的节点名**当作点位（敌人在别的节点"开始检查武器"不算）。
+const nodeNames = new Set(nodes.map((n) => n.name));
 await page.goto('https://rtt.toogle.club/raid?tab=history', { waitUntil: 'domcontentloaded' });
 try {
   await page.locator('button', { hasText: /\d{2}-\d{2} \d{2}:\d{2}:\d{2}/ }).first().waitFor({ timeout: 20000 });
@@ -97,11 +99,15 @@ for (let i = 0; i < n; i++) {
   let cur = null;
   const perNode = {};
   for (const line of lines) {
-    const st = line.match(/(?:开始检查|正在检查|继续检查|检查)\s*([^\s，。]+)\s*的物资/);
-    if (st) { cur = st[1]; continue; }
-    const mv = line.match(/(?:开始向|开始赶往|前往|动身去|出发，目标)\s*([^\s，。]+)/);
-    if (mv) { cur = null; continue; } // 换赶路目标后不再把收获算到上一个点位
-    const pk = line.match(/(?:拿到|装好搜到的|收下|收起|拾取)\s*([^×]+?)\s*×(\d+)/);
+    // 搜刮开始：实测至少有这几种措辞 ——
+    // 「开始检查 X 的物资」「开始搜索 X」「在 X 开始找物资」「在 X 开始搜刮」
+    // 只认**真实节点名**，否则敌人的「开始检查并排除 M9 的供弹故障」也会被当成点位。
+    const st = line.match(/(?:开始检查|正在检查|继续检查|开始搜索|继续搜索)\s*([^\s，。]+)/)
+      || line.match(/在\s*([^\s，。]+)\s*(?:开始找物资|开始搜刮|开始搜查)/);
+    if (st && nodeNames.has(st[1])) { cur = st[1]; continue; }
+    const mv = line.match(/(?:开始向|开始赶往|前往|动身去|出发，目标|选定)\s*([^\s，。]+)/);
+    if (mv && nodeNames.has(mv[1])) { cur = null; continue; } // 换赶路目标后不再把收获算到上一个点位
+    const pk = line.match(/(?:已拿到|拿到|装好搜到的|收下|收起|拾取)\s*([^×]+?)\s*×(\d+)/);
     if (pk && cur) {
       const name = pk[1].trim();
       const qty = Number(pk[2]) || 1;
