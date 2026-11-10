@@ -16,6 +16,17 @@ const page = ctx.pages().find((p) => p.url().includes('toogle.club'));
 await page.goto('https://rtt.toogle.club/raid?tab=history', { waitUntil: 'domcontentloaded' });
 await page.waitForTimeout(2000);
 
+// "被击中"要按玩家名匹配，但名字不能写死在脚本里（换个人用就失效）。
+// 优先取环境变量 RTT_PLAYER，否则从战局日志页脚 "HP x/y · N GB · <玩家名>" 自动识别。
+const ME = process.env.RTT_PLAYER || await page.evaluate(() => {
+  const t = document.body.innerText || '';
+  const m = t.match(/HP \d+\s*\/\s*\d+\n[\d,]+ GB\n([^\n]+)/);
+  return m ? m[1].trim() : '';
+});
+if (!ME) console.error('[warn] 未能识别玩家名，被击中统计将为 0；可用 RTT_PLAYER=<你的名字> 指定');
+else console.error('[player] ' + ME);
+const escaped = ME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // 列表行（button）是元数据的权威来源：时间|地图|结局|N 杀|±收益 GB|XP
 const rows = page.locator('button', { hasText: /\d{2}-\d{2} \d{2}:\d{2}:\d{2}/ });
 const n = await rows.count();
@@ -67,7 +78,7 @@ for (let i = 0; i < n; i++) {
     shotsFired: count(/开火|射击/g),
     hits: count(/命中/g),
     damageLines: count(/伤害$/gm),
-    hitsTaken: count(/射向 罗觉觉/g),
+    hitsTaken: ME ? count(new RegExp('射向 ' + escaped, 'g')) : 0,
     // 游戏对"弹尽"有多种措辞，只匹配一种会全部漏统计（实测漏报）
     outOfAmmo: count(/已无弹可用|没有可用子弹|无弹可用|弹药耗尽|弹匣为空/g),
     noLoot: count(/已无可搜物资/g),
