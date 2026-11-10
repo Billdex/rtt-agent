@@ -14,7 +14,13 @@ const ctx = browser.contexts()[0];
 const page = ctx.pages().find((p) => p.url().includes('toogle.club'));
 
 await page.goto('https://rtt.toogle.club/raid?tab=history', { waitUntil: 'domcontentloaded' });
-await page.waitForTimeout(2000);
+// 实测（11-10 首跑）：跳转后 2 秒列表还没渲染完，会解析出 0 行。改为等第一行出现再继续。
+try {
+  await page.locator('button', { hasText: /\d{2}-\d{2} \d{2}:\d{2}:\d{2}/ }).first().waitFor({ timeout: 20000 });
+} catch {
+  console.error('[warn] 20 秒内没等到战局历史列表（可能在重连）；本次结果可能为 0 行，稍后重跑');
+}
+await page.waitForTimeout(800);
 
 // "被击中"要按玩家名匹配，但名字不能写死在脚本里（换个人用就失效）。
 // 优先取环境变量 RTT_PLAYER，否则从战局日志页脚 "HP x/y · N GB · <玩家名>" 自动识别。
@@ -68,8 +74,16 @@ for (let i = 0; i < n; i++) {
   const count = (re) => (text.match(re) || []).length;
 
   // 关键事件
-  const extractIdx = entries.findIndex((e) => /完成撤离|阵亡|被击杀|死亡/.test(e.msg.join(' ')));
-  const reasonEntry = entries.slice(Math.max(0, extractIdx - 6), extractIdx + 1).map((e) => `[${e.turn}] ${e.msg.join(' ')}`);
+  // "撤离成功"在日志里有多种措辞：`已完成撤离`、`已撤出战局，带出物资价值 X`（实测 11-10 09:09 机场局）。
+  // 取**最后**一处命中：中段击杀日志里也常有"死亡"字样，取第一处会把击杀当成结局（实测把 09:09 那局的
+  // 撤离误定位到第 173 回合的一次击杀）。
+  let extractIdx = -1;
+  entries.forEach((e, i) => {
+    if (/撤离成功|成功撤出|完成撤离|撤出战局|匆匆撤离|阵亡|被击杀|死亡|致命攻击|带出物资价值|带出价值/.test(e.msg.join(' '))) extractIdx = i;
+  });
+  // 都没匹配到（措辞又变了）时退回最后 6 条，否则 slice(0,0) 会给出空数组、看起来像"没有日志"。
+  const window_ = extractIdx >= 0 ? entries.slice(Math.max(0, extractIdx - 6), extractIdx + 1) : entries.slice(-6);
+  const reasonEntry = window_.map((e) => `[${e.turn}] ${e.msg.join(' ')}`);
 
   const stat = {
     ...listMeta,
