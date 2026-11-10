@@ -1,0 +1,110 @@
+{
+  "combat": {
+    "aimZone": "center",
+    "autoMeleeWhenEmpty": true,
+    "autoReloadOutOfCombat": true,
+    "autoSwitchSecondary": true,
+    "cover": "adaptive",
+    "fireMode": "auto_by_range",
+    "grenades": "situational",
+    "reloadAt": 0.3,
+    "retreatHp": 35
+  },
+  "encounter": [
+    {
+      "do": "retreat_active",
+      "when": [
+        [
+          "hpPercent",
+          "<",
+          40
+        ]
+      ]
+    },
+    {
+      "do": "attack_active",
+      "when": []
+    }
+  ],
+  "extract": [
+    [
+      "heavyBleedNoItem",
+      "=",
+      true
+    ],
+    [
+      "fractureNoItem",
+      "=",
+      true
+    ],
+    [
+      "softTicksLeft",
+      "<=",
+      120
+    ],
+    [
+      "ticksLeft",
+      "<=",
+      60
+    ],
+    [
+      "backpackFull",
+      ">=",
+      0.95
+    ],
+    [
+      "weightRatio",
+      ">=",
+      0.9
+    ],
+    [
+      "hpPercent",
+      "<",
+      30
+    ]
+  ],
+  "extractOnNoAmmo": true,
+  "extractOnOverweight": true,
+  "loot": {
+    "autoEquip": true,
+    "autoEquipWeapon": false,
+    "corpseContainers": "contents",
+    "corpseMinTier": "scav",
+    "keepNeeds": true,
+    "killCorpseFirst": false,
+    "lockPrimaryWeapon": false,
+    "lootArmor": true,
+    "lootCorpses": "yes",
+    "maxNodeTicks": 10,
+    "minNodeTicks": 1,
+    "minValuePerLiter": 0,
+    "pickupMaxRarity": "all",
+    "prioritizeEmptyStash": false,
+    "replaceRatio": 1.2,
+    "weights": {},
+    "whitelist": [],
+    "blacklist": []
+  },
+  "map": {
+    "noiseReaction": "avoid",
+    "prioritizeScout": true,
+    "routeMode": "auto",
+    "stance": "walk",
+    "route": [],
+    "extractPreference": [],
+    "extractTriggers": [],
+    "priorityNodes": {}
+  },
+  "medical": {
+    "autoInjectors": true,
+    "bleed": "out_of_combat",
+    "emergency": true,
+    "fracture": "leg_first",
+    "inCombat": false,
+    "painkiller": true,
+    "partThreshold": 0.5,
+    "safety": "cover",
+    "stamina": true,
+    "surgery": true
+  }
+}

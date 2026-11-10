@@ -1,0 +1,11 @@
+# 本工具包应当可以直接打包分享，因此不得夹带任何运行产物或登录态。
+# 下面这些即使误生成了，也不该被提交。
+progress/
+rtt-progress/
+chrome-profile/
+node_modules/
+.pnpm-store/
+*.png
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,10 @@
+{
+  "name": "ai-raid-agent-kit",
+  "version": "0.2.0",
+  "private": true,
+  "description": "通过 CDP 接管已登录的浏览器，把浏览器游戏的托管流程变成可观测、可归因、可迭代的流水线",
+  "type": "module",
+  "dependencies": {
+    "playwright-core": "^1.65.0"
+  }
+}

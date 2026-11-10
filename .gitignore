@@ -1,0 +1,26 @@
+# ── 个性化产物：每人每次都不一样，不进版本库 ──
+progress/
+rtt-progress/
+chrome-profile/
+
+# ── 依赖 ──
+node_modules/
+.pnpm-store/
+
+# ── 环境变量 / 令牌 ──
+.env
+.env.*
+!.env.example
+
+# ── 系统与编辑器 ──
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+
+# ── 截图、临时文件 ──
+*.png
+*.tmp
+*.bak
