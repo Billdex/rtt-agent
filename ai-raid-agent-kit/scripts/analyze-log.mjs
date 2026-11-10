@@ -23,8 +23,16 @@ try {
 await page.waitForTimeout(800);
 
 // "被击中"要按玩家名匹配，但名字不能写死在脚本里（换个人用就失效）。
-// 优先取环境变量 RTT_PLAYER，否则从战局日志页脚 "HP x/y · N GB · <玩家名>" 自动识别。
-const ME = process.env.RTT_PLAYER || await page.evaluate(() => {
+// 三级回退：环境变量 → /api/me 的 nickname → 页脚 "HP x/y · N GB · <玩家名>"。
+// 实测（11-10 10:5x）：战局记录页脚不再渲染 HP/GB 行，旧的页脚正则直接失效，
+// 导致 10 局全部 hitsTaken=0（看起来像"从没被击中"）。
+const ME = process.env.RTT_PLAYER || await page.evaluate(async () => {
+  try {
+    const r = await fetch('/api/me', { credentials: 'include' });
+    const j = await r.json();
+    const nickname = j?.account?.nickname;
+    if (nickname) return nickname;
+  } catch { /* 落到页脚解析 */ }
   const t = document.body.innerText || '';
   const m = t.match(/HP \d+\s*\/\s*\d+\n[\d,]+ GB\n([^\n]+)/);
   return m ? m[1].trim() : '';
@@ -70,6 +78,12 @@ for (let i = 0; i < n; i++) {
     if (tm) { cur = { turn: +tm[1], msg: [] }; entries.push(cur); continue; }
     if (cur && !/^(营地|装备|战局|策略|商人|LOG|记录|战局|详情|报告问题|撤离|击杀|战局收益|带出 FIR 物品)$/.test(line)) cur.msg.push(line);
   }
+  // 实测（11-10 10:5x）：详情页并不渲染全部日志（293 回合的局只有 112 条），
+  // 所以"交火次数/被击中/装填"这类聚合值只是抽样，不能当绝对数用；尾部与结局是完整的。
+  if (meta.turns && entries.length && entries.length < meta.turns * 0.8) {
+    console.error(`[warn] ${listMeta.time} 详情页只渲染了 ${entries.length}/${meta.turns} 条日志，聚合统计偏低`);
+  }
+
   const text = entries.map((e) => e.msg.join(' ')).join(' ');
   const count = (re) => (text.match(re) || []).length;
 
