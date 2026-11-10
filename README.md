@@ -52,11 +52,13 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 ```
 
 然后把 `QUICKSTART.md` 交给你的 AI 助手，说一句「按 QUICKSTART 开始」。
+（已经配好 `AGENTS.md`，支持该约定的助手会自动读它，不必每次点名文件。）
 
 ## 仓库结构
 
 ```
 .
+├── AGENTS.md                # 给 AI 助手的总入口：该读什么、能跑什么、红线
 ├── QUICKSTART.md            # 给 AI 助手的完整说明书（先读这个）
 ├── progress/                # 运行产物，不进版本库
 └── ai-raid-agent-kit/       # 工具包，可直接拷贝分享
