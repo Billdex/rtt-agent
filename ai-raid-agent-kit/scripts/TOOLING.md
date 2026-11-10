@@ -143,6 +143,14 @@ node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12 > /tmp/rw.
 - 后果：`analyze-log` 每次只能覆盖最近 10 局；更早的样本只能靠上一次的 `progress/raid-analysis.json` 和 `report.md` 里的战报表格，**不要以为"重跑一次就拿到全量"**。
 - 做法：需要跨批次样本时，先把旧 `raid-analysis.json` 复制成 `progress/run-<用途>/raid-analysis.json` 再重跑，两边合并算。
 
+## T-18 开关的 `aria-pressed` 不等于批次状态
+
+- 实测（11-11 03:19 / 03:23）：`button.auto-enter-toggle` 读到 `aria-pressed=false`「未开启」，同一时间记录页在 03:00:08、03:15:01 连续进局，
+  且 03:15 起还有一局在跑（第 169 回合）。面板读数与实际调度不同步。
+- 判断"批次还在不在跑"只看两处：**记录页最新一条时间戳**（`/raid?tab=history` 首行）+ `raid-watch.mjs` 退出码。
+- 同时：`已自动进入 N 局 · 最长 24 小时` 是计数，不代表开关已关；真实取值要读三个 `input`（间隔 / 最多自动进入 / 资金下限）。
+  实测该号为 `10 / 400 / 300000`——文档里写的"4 局"是错的，别照抄。
+
 ---
 
 ## 与旧编号的对应（便于检索历史报告里的引用）
