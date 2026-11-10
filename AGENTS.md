@@ -14,7 +14,7 @@ QUICKSTART.md          完整操作说明书（AI 执行手册）
 AGENTS.md              本文件：入口与分流
 progress/              运行产物，被 gitignore，不进版本库
 ai-raid-agent-kit/     可分享的工具包
-  scripts/             8 个脚本，全部通过 CDP 操作已登录浏览器
+  scripts/             脚本目录，全部通过 CDP 操作已登录浏览器
   LESSONS.md           实测踩坑，按编号顺延（本项目最值钱的部分）
   SKILL.md             浓缩规约（喂给 AI 的系统指令版）
   AGENT_PROMPT.md      另一版提示词

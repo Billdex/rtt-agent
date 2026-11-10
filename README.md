@@ -62,7 +62,7 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 ├── QUICKSTART.md            # 给 AI 助手的完整说明书（先读这个）
 ├── progress/                # 运行产物，不进版本库
 └── ai-raid-agent-kit/       # 工具包，可直接拷贝分享
-    ├── scripts/             # 6 个脚本，全部通过 CDP 操作已登录浏览器
+    ├── scripts/             # 脚本目录，全部通过 CDP 操作已登录浏览器
     ├── SKILL.md             # 作为系统指令喂给 AI 的浓缩版
     ├── AGENT_PROMPT.md      # 另一版提示词
     ├── LESSONS.md           # 踩过的坑（这套东西最值钱的部分）
