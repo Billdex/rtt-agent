@@ -17,7 +17,7 @@
 //   （--every=120 时约 4 分钟）。现在空闲时改用 --probe（默认 8s）快速复核，
 //   尾部延迟降到 every + probe ≈ 1 分钟；并且汇总里给 lagSec，能直接看到"晚了多少"。
 //
-// 只做 page.goto('/raid') + 读文本，不点任何按钮（LESSONS 1）。
+// 只做 page.goto('/raid') + 读文本，不点任何按钮（TOOLING T-01）。
 import { chromium } from 'playwright-core';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';

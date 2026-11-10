@@ -15,7 +15,7 @@ const stash = await p.evaluate(() => {
     weight: (t.match(/负重 ([\d.]+ kg \/ [\d.]+ kg)/) || [])[1] || '',
     carriedValue: (t.match(/携带总价值 ([\d,]+) GB/) || [])[1] || '',
     cash: (t.match(/GB ([\d,]+)/) || [])[1] || '',
-    // 局外记账用：批次收益 = 现金增量 + 仓库价值增量（LESSONS 36），所以必须留仓库基线
+    // 局外记账用：批次收益 = 现金增量 + 仓库价值增量（LESSONS G-01），所以必须留仓库基线
     stashValue: (t.match(/仓库总价值\s*([\d,]+) GB/) || [])[1] || '',
     stashVolume: (t.match(/([\d.]+) L \/ [\d.]+ L/) || [])[1] || '',
   };

@@ -58,16 +58,26 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 
 ```
 .
-├── AGENTS.md                # 给 AI 助手的总入口：该读什么、能跑什么、红线
-├── QUICKSTART.md            # 给 AI 助手的完整说明书（先读这个）
-├── progress/                # 运行产物，不进版本库
+├── AGENTS.md                # 给 AI 助手的路由表：先判断这轮属于哪条线
+├── QUICKSTART.md            # 第一次接触的完整说明书
+├── playbook/                # 规约：两条目标线 / 实验纪律 / 人机边界 / 任务单模板
+│   ├── strategy-line.md         # A 线：策略迭代
+│   ├── account-line.md          # B 线：账号经营
+│   ├── method.md                # 实验纪律（M 编号，两线共用）
+│   ├── human-touchpoints.md     # 必须停下问人的地方（H 编号）
+│   └── task-template.md         # 每轮一张任务单
+├── progress/                # 运行产物，不进版本库（STATE.md 是唯一状态源）
 └── ai-raid-agent-kit/       # 工具包，可直接拷贝分享
     ├── scripts/             # 脚本目录，全部通过 CDP 操作已登录浏览器
+    │   └── TOOLING.md       # 工具与操作层知识（T 编号，修好即删）
     ├── SKILL.md             # 作为系统指令喂给 AI 的浓缩版
     ├── AGENT_PROMPT.md      # 另一版提示词
-    ├── LESSONS.md           # 踩过的坑（这套东西最值钱的部分）
+    ├── LESSONS.md           # 游戏知识（G 编号，只放会改变游戏决策的事实）
     └── TEMPLATE-report.md   # 战报模板
 ```
+
+**为什么分成两套知识**：游戏事实（地图/经济/战斗）长期有效，脚本坑（选择器/受控组件）修好就该消失。
+混在一个文件里，会让"最值钱的部分"被一次性 bug 记录淹没。
 
 产物（战报、日志统计、任务清单）一律写到**工作目录的 `progress/`**，不写进工具包，
 所以这个目录可以直接打包发给别人，不会夹带前任的战绩。
@@ -100,4 +110,5 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 - `战局收益` 是净额，`带出物资价值` 是毛值，两者能差一个量级。
 - 游戏对同一件事有多种措辞（如弹尽：`已无弹可用` / `没有可用子弹`），只匹配一种会静默漏统计。
 
-更多踩坑记录见 [`ai-raid-agent-kit/LESSONS.md`](ai-raid-agent-kit/LESSONS.md)。
+- 游戏知识（会改变决策的事实）见 [`ai-raid-agent-kit/LESSONS.md`](ai-raid-agent-kit/LESSONS.md)（G 编号）。
+- 脚本与页面操作的坑见 [`ai-raid-agent-kit/scripts/TOOLING.md`](ai-raid-agent-kit/scripts/TOOLING.md)（T 编号）。

@@ -48,7 +48,7 @@ const results = [];
 
 const num = (s) => Number(String(s ?? '').replace(/[^\d-]/g, '')) || 0;
 
-// 详情区的渲染耗时不定（LESSONS 37：新图整页加载更慢，固定 900ms 会拿到空详情 → turns=0）。
+// 详情面板的就绪时间不定（TOOLING T-14：固定等待会拿到上一局的残留面板或空详情 → turns=0）。
 // 判据是「<地图> · N 回合」出现 **且**「战局收益」等于列表行那一笔 ——
 // 后者用来排除"读到上一局残留详情"（点下一行时旧面板还在，看起来像解析成功）。
 async function openDetail(i, gain) {
@@ -98,7 +98,7 @@ for (let i = 0; i < n; i++) {
     fir: num((raw.replace(/\n+/g, '|').match(/带出 FIR 物品\|(\d+) 件/) || [])[1]),
   };
   if (!opened || !meta.turns) {
-    console.error(`[warn] ${listMeta.time} 详情区没打开或没有回合数，本行聚合值不可用（LESSONS 37），可稍后重跑`);
+    console.error(`[warn] ${listMeta.time} 详情区没打开或没有回合数，本行聚合值不可用（TOOLING T-14），可稍后重跑`);
   } else if (meta.map && listMeta.map && !meta.map.includes(listMeta.map) && !listMeta.map.includes(meta.map)) {
     console.error(`[warn] ${listMeta.time} 详情地图「${meta.map}」与列表「${listMeta.map}」不一致，可能读到上一局残留`);
   }
