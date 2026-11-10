@@ -48,6 +48,33 @@ const results = [];
 
 const num = (s) => Number(String(s ?? '').replace(/[^\d-]/g, '')) || 0;
 
+// 详情区的渲染耗时不定（LESSONS 37：新图整页加载更慢，固定 900ms 会拿到空详情 → turns=0）。
+// 判据是「<地图> · N 回合」出现 **且**「战局收益」等于列表行那一笔 ——
+// 后者用来排除"读到上一局残留详情"（点下一行时旧面板还在，看起来像解析成功）。
+async function openDetail(i, gain) {
+  const want = (gain >= 0 ? '+' : '-') + Math.abs(gain);
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    await rows.nth(i).click();
+    try {
+      await page.waitForFunction(
+        (w) => {
+          const t = document.body.innerText;
+          if (!/·\s*\d+\s*回合/.test(t)) return false;
+          const m = t.match(/战局收益\s*\n\s*([+\-][\d,]+)\s*GB/);
+          return !!m && m[1].replace(/,/g, '') === w;
+        },
+        want,
+        { timeout: 8000 },
+      );
+      return true;
+    } catch {
+      if (attempt === 2) return false;
+      console.error(`[warn] 第 ${i + 1} 行详情 8 秒内没出来，重点一次`);
+    }
+  }
+  return false;
+}
+
 for (let i = 0; i < n; i++) {
   const label = (await rows.nth(i).innerText()).replace(/\n+/g, '|').trim();
   const listMeta = {
@@ -58,17 +85,23 @@ for (let i = 0; i < n; i++) {
     gain: num((label.match(/([+\-][\d,]+)\s*GB/) || [])[1]),
   };
 
-  await rows.nth(i).click();
-  await page.waitForTimeout(900);
+  const opened = await openDetail(i, listMeta.gain);
   const raw = await page.evaluate(() => document.body.innerText);
   const lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
 
   // 详情区元数据：回合数 / FIR 件数（结局、击杀、收益取列表行，更稳）
-  const head = raw.replace(/\n+/g, '|');
+  // 回合数只从头部「<地图> · N 回合」取，避免正文里其他 "N 回合" 命中。
+  const headMatch = raw.match(/([^\n]+?)\s·\s(\d+)\s*回合/);
   const meta = {
-    turns: num((head.match(/(\d+)\s*回合/) || [])[1]),
-    fir: num((head.match(/带出 FIR 物品\|(\d+) 件/) || [])[1]),
+    map: headMatch ? headMatch[1].trim() : listMeta.map,
+    turns: headMatch ? Number(headMatch[2]) : 0,
+    fir: num((raw.replace(/\n+/g, '|').match(/带出 FIR 物品\|(\d+) 件/) || [])[1]),
   };
+  if (!opened || !meta.turns) {
+    console.error(`[warn] ${listMeta.time} 详情区没打开或没有回合数，本行聚合值不可用（LESSONS 37），可稍后重跑`);
+  } else if (meta.map && listMeta.map && !meta.map.includes(listMeta.map) && !listMeta.map.includes(meta.map)) {
+    console.error(`[warn] ${listMeta.time} 详情地图「${meta.map}」与列表「${listMeta.map}」不一致，可能读到上一局残留`);
+  }
 
   // 日志条目
   const entries = [];
