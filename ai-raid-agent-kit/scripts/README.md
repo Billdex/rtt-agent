@@ -96,6 +96,20 @@ node scripts/analyze-log.mjs
 
 ---
 
+## strategy-snapshot.mjs —— 策略快照与 diff
+
+```bash
+node scripts/strategy-snapshot.mjs
+```
+
+把 `/strategy` 当前策略原文存成 `progress/strategy-<本地时间>.json`，并与上一份快照做**字段级 diff**
+（输出 `changeCount` 与 `changes: [{key, from, to}]`）。
+
+- 只读：只点「JSON」打开面板，**永不点「保存策略」**
+- 若「高级模式」已勾选（槽位被 Lua 接管），读到的是 Lua 代码，会存成 `.lua` 原文并跳过 JSON diff
+- 用途：调参前跑一次、调参后再跑一次，diff 就是"本轮到底改了什么"的机器凭证，比人记可靠
+- 局限性：只有一份快照时只提示"这是第一份"；跨目录对比需要 `RTT_OUT` 指定同一个目录
+
 ## quest-scan.mjs —— 任务扫描
 
 ```bash
