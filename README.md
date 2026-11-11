@@ -85,6 +85,7 @@ node ai-raid-agent-kit/scripts/rtt.mjs status
 | `preflight.mjs` | 开局前检查：装备槽位、负重、血量、现金 |
 | `quest-scan.mjs` | 扫描商人任务，找出进度已满却未提交的 |
 | `analyze-log.mjs` | 解析战局历史，输出逐局统计（交火、被击中、弹尽、出血） |
+| `gear-db.mjs` | **装备数据库**：一次拉取全部 389 件物品（弹药/武器/防具/配件…）的完整数值到 `progress/gear-db.json`，之后 `--query` 离线查 |
 | `monitor.mjs` | 局中定时采样，写 `raid-log.jsonl` |
 | `_peek.mjs` | 一行诊断：当前页状态、可见按钮清单（排障用） |
 

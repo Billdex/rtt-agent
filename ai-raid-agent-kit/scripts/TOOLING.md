@@ -143,6 +143,35 @@ node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12 > /tmp/rw.
 - 后果：`analyze-log` 每次只能覆盖最近 10 局；更早的样本只能靠上一次的 `progress/raid-analysis.json` 和 `report.md` 里的战报表格，**不要以为"重跑一次就拿到全量"**。
 - 做法：需要跨批次样本时，先把旧 `raid-analysis.json` 复制成 `progress/run-<用途>/raid-analysis.json` 再重跑，两边合并算。
 
+## T-19 装备详情有**折叠**的数据区：必须点开才有数值
+
+- 物品详情弹窗里，`弹药数据` / `武器数据` / `防护数据` / `容器数据` 都是**可折叠**的（默认收起，右侧有 `^`）。
+  点标题展开后才出现数值，例如：
+  - 弹药：`伤害 / 穿深 31.45 / 34`、`护甲伤害 / 破片 40% / 18%`、`轻 / 重出血 27% / 12%`、`精度 / 后坐 / 故障 0.02 / 1 / 0.9`
+  - 武器：`射程 100–400 m`、`射速 650 RPM`、`精度 / 后坐 4.5 MOA / 180`、`可靠性 76`、`弹匣 0 / 30`
+  - 防弹衣：`防护等级 3`、`覆盖 胸部 88% / 腹部 72%`、`钝伤 / 跳弹 24% / 0%`、`移动 / 人机 / 感知 / 隐蔽惩罚 0.02 / 1 / 0 / 0`、`耐久 36 / 36`
+- 详情里还有游戏自带估算：`RTT+ 价值密度（GB/L）`、`单位重量价值（GB/kg）`、`参考卖价`、`最佳收购系数` —— **A 线的价值密度阈值直接读这个，不用自己算**。
+- 教训：**没点开折叠区就说"游戏不提供数值"是错的**（本仓库 11-11 犯过）。先点开再下结论。
+
+## T-20 取装备数值的脚本化做法
+
+- 打开详情 → `body.locator('text=弹药数据')`（或 `武器数据` / `防护数据`）**点一次**展开 → 再读 `modal-body` 全文。
+- 读之前先确认弹窗是**该物品**的（`.modal-body` 里含物品名），避免上一个弹窗没关导致串号。
+
+## T-21 装备数据别爬 DOM：走内容 API（`gear-db.mjs`）
+
+- 客户端本来就从内容 API 拿全量数据，**不需要点 389 个详情**：
+  ```js
+  const man = await fetch('/api/content/public/manifest', { credentials: 'include' }).then(r => r.json());
+  const c = await fetch('/api/content/' + man.hash, { credentials: 'include' }).then(r => r.json());
+  // c.items 里每件都带完整字段：ammo{damage,penetration,armorDamage,fragChance,...} / weapon{rpm,moa,recoil,ergonomics,reliability,magCapacity,slots} / armor{class,durability,coverageRatio,...} / container{capacity}
+  ```
+- 已封装为 `scripts/gear-db.mjs`：拉一次存 `progress/gear-db.json`，`meta.contentHash` 记录内容版本；hash 不变自动跳过（`--force` 强制重拉）。
+- **`contentHash` 是"游戏数据有没有变"的判据**：更新日志说改了数值、或本地值与游戏不符时，比对 hash 再决定是否重拉；`node-loot.mjs` 用的是同一个 hash。
+- `--query <关键词>` 只读本地，不需要浏览器/登录 —— 日常查装备走这条。
+- 已知边界：内容 API 给的是**物品定义**，**不含"当前商人卖不卖"**；可购买性还要看商人库存（M-10）。
+
+
 ## T-18 开关的 `aria-pressed` 不等于批次状态
 
 - 实测（11-11 03:19 / 03:23）：`button.auto-enter-toggle` 读到 `aria-pressed=false`「未开启」，同一时间记录页在 03:00:08、03:15:01 连续进局，

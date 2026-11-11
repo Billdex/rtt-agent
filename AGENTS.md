@@ -82,6 +82,8 @@ node ai-raid-agent-kit/scripts/quest-scan.mjs          # 任务三态扫描（�
 node ai-raid-agent-kit/scripts/analyze-log.mjs         # 核心：解析战局日志 → raid-analysis.{json,md}
 node ai-raid-agent-kit/scripts/strategy-snapshot.mjs   # 调参前后各跑一次，diff 就是改动凭证
 node ai-raid-agent-kit/scripts/node-loot.mjs           # 点位物资（地图数据 + 日志实收）
+node ai-raid-agent-kit/scripts/gear-db.mjs --md        # 装备数据库：拉全部 389 件数值 → progress/gear-db.json（hash 未变自动跳过）
+node ai-raid-agent-kit/scripts/gear-db.mjs --query 5.45  # 之后只读本地查装备，不联网
 node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12   # 盯批次（0=结束, 2=到时限）
 ```
 
