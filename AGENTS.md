@@ -39,7 +39,7 @@ kit 内部不许引用 kit 之外的文件；账号取值只能出现在 `progre
 | --- | --- | --- |
 | 第一次接触 / 要正式开跑 | — | `QUICKSTART.md` 全文 |
 | 提升 `收益/回合`、验证某个参数、换地图 | A | `ai-raid-agent-kit/METHOD.md` §运营 1–5 + `progress/STATE.md` §1 / §3 |
-| 重装、治疗、清仓、接任务、改配装、算账 | B | `ai-raid-agent-kit/METHOD.md` §运营 6–9 + `progress/STATE.md` §2 |
+| 重装、治疗、清仓、接任务、改配装、算账 | B | `ai-raid-agent-kit/METHOD.md` §运营 6–9 + M-11（配装分层）+ `progress/STATE.md` §2 / §3 |
 | 脚本报错、页面点不到、解析失败 | 工具 | `ai-raid-agent-kit/scripts/TOOLING.md`（按编号 grep） |
 | 接着上次的进度 | — | `progress/HANDOFF.md`（只有两个问题：停在哪 / 怎么接） |
 | 要解释某个反常现象 | — | `LESSONS.md`（G 编号）；查不到再看 `scripts/README.md` |
@@ -84,6 +84,7 @@ node ai-raid-agent-kit/scripts/strategy-snapshot.mjs   # 调参前后各跑一�
 node ai-raid-agent-kit/scripts/node-loot.mjs           # 点位物资（地图数据 + 日志实收）
 node ai-raid-agent-kit/scripts/gear-db.mjs --md        # 装备数据库：拉全部 389 件数值 → progress/gear-db.json（hash 未变自动跳过）
 node ai-raid-agent-kit/scripts/gear-db.mjs --query 5.45  # 之后只读本地查装备，不联网
+node ai-raid-agent-kit/scripts/stock-check.mjs --levels 军需=2,军械=1,杂货=2,医生=1 --loadout "w_ak74:1,ammo_545_bt:150"  # 配装可补性（0=无缺口 2=有缺口）
 node ai-raid-agent-kit/scripts/raid-watch.mjs --every=45 --minutes=12   # 盯批次（0=结束, 2=到时限）
 ```
 
